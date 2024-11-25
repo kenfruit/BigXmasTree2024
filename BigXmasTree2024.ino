@@ -3,8 +3,6 @@
 // different pins, each strip getting its own CRGB array to be played with, only this time they're going
 // to be all parts of an array of arrays.
 
-
-
 // Current Board is ESP-WROOM-DA
 
 
