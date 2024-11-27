@@ -8,6 +8,16 @@
 
 #include <FastLED.h>
 
+#define DATA_PIN_0 13
+#define DATA_PIN_1 12
+#define DATA_PIN_2 14
+#define DATA_PIN_3 27
+#define DATA_PIN_4 26
+#define DATA_PIN_5 25
+#define DATA_PIN_6 33
+#define DATA_PIN_7 32
+
+
 enum {
   GRB_Black = 0x000000,   GRB_Navy = 0x000080,   GRB_DarkBlue = 0x00008B,   GRB_MediumBlue = 0x0000CD,   GRB_Blue = 0x0000FF,   GRB_DarkGreen = 0x640000,   GRB_Green = 0x800000,
   GRB_Teal = 0x800080,   GRB_DarkCyan = 0x8B008B,   GRB_DeepSkyBlue = 0xBF00FF,   GRB_DarkTurquoise = 0xCE00D1,   GRB_MediumSpringGreen = 0xFA009A,   GRB_Lime = 0xFF0000,   GRB_SpringGreen = 0xFF007F,
@@ -36,8 +46,6 @@ enum {
   GRB_Ivory = 0xFFFFF0,   GRB_White = 0xFFFFFF,   GRB_KRFWhite = 0xFF60FF,   GRB_KRFDarkGreen = 0x400000,   GRB_KRFDarkPurple = 0x004040,   GRB_KRFDarkDarkPurple = 0x000810
 };
 
-
-
 enum { setNone,
        setEven,
        setOdd,
@@ -47,9 +55,9 @@ enum { setNone,
 //#define DEBUG2 2
 //#define DEBUG3 3
 
+// For the array of lights 8 wide by 50 high
 #define NUM_STRIPS 8
 #define NUM_LEDS_PER_STRIP 50
-
 
 #define NEXT_TO_LAST_ROW (NUM_LEDS_PER_STRIP - 1)
 
@@ -98,20 +106,8 @@ void setup() {
     randomColumn[i] = random(8);
   }
 
-
-
-
   // tell FastLED there's 50 NEOPIXEL leds on each pin
-#define DATA_PIN_0 13
-#define DATA_PIN_1 12
-#define DATA_PIN_2 14
-#define DATA_PIN_3 27
-#define DATA_PIN_4 26
-#define DATA_PIN_5 25
-#define DATA_PIN_6 33
-#define DATA_PIN_7 32
 
-  //36 39 34 35 32 33 25 26
   FastLED.addLeds<NEOPIXEL, DATA_PIN_0>(leds[0], NUM_LEDS_PER_STRIP);
   FastLED.addLeds<NEOPIXEL, DATA_PIN_1>(leds[1], NUM_LEDS_PER_STRIP);
   FastLED.addLeds<NEOPIXEL, DATA_PIN_2>(leds[2], NUM_LEDS_PER_STRIP);
@@ -124,7 +120,8 @@ void setup() {
 }
 
 
-  void loop() {
+void loop()
+{
   //Serial.println(subProgramIndex);  
 
   if (firstPass)
@@ -132,11 +129,7 @@ void setup() {
     //testPattern3();
     testPattern1();
     testPattern2();
-    //newGarland(GRB_KRFWhite, GRB_DarkRed, 20, ANIMATION_DELAY*2);
-    //icicles(GRB_KRFWhite, 60, 600);
-   
 
-  
     firstPass = false;
   }
   
@@ -152,21 +145,6 @@ void setup() {
 
   subProgramIndex++;
   subProgramIndex %= 60;
-
-
-  // // This outer loop will go over each strip, one at a time
-  // for (int x = 0; x < NUM_STRIPS; x++)
-  // {
-  //   blip(x+1);
-
-  //   // This inner loop will go over each led in the current strip, one at a time
-  //   for (int i = 0; i < NUM_LEDS_PER_STRIP; i++) {
-  //     leds[x][i] = CRGB::Red;
-  //     FastLED.show();
-  //     leds[x][i] = CRGB::Black;
-  //     delay(50);
-  //   }
-  // }
 }
 
 // Repeat this pattern forever
@@ -176,8 +154,15 @@ void lightProgram(int subProgramIndex)
     FastLED.clear();
   }
 
+  // Walk through the different displays in this order
   switch (subProgramIndex) {
     case 0:
+      // Test code here so it runs first
+      
+      //goGreen();
+      //swoosh(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      //rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
+
       goGreen();
       horzColorBandsDiag(GRB_KRFDarkGreen, 7, GRB_KRFWhite, 3, 2, CYCLE_TIME_LONG, ANIMATION_DELAY);
       break;
@@ -231,7 +216,7 @@ void lightProgram(int subProgramIndex)
     case 12:
       goGreen();
       zigzag(GRB_KRFDarkGreen, GRB_KRFWhite, GRB_KRFDarkDarkPurple, CYCLE_TIME_LONG*2, ANIMATION_DELAY);
-      rotateArrayLeft(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
       break;
 
     case 13:
@@ -280,17 +265,15 @@ void lightProgram(int subProgramIndex)
 
     case 23:
 
-    marquee(GRB_KRFWhite, GRB_KRFDarkGreen, 70);
-    marquee(GRB_DarkRed, GRB_KRFDarkGreen, 70);
-    marquee(GRB_Purple, GRB_KRFDarkGreen, 70);
-
-      //spiral(scratchPad, CYCLE_TIME_SHORT, 2);
+      marquee(GRB_KRFDarkGreen, GRB_KRFWhite, 70);
+      marquee(GRB_KRFDarkGreen, GRB_DarkRed, 70);
+      marquee(GRB_KRFDarkGreen, GRB_Purple, 70);
       break;
 
     case 24:
       goGreen();
       zigzag(GRB_KRFDarkGreen, GRB_KRFWhite, GRB_Blue, CYCLE_TIME_LONG*2, ANIMATION_DELAY);
-      rotateArrayLeft(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
       break;
 
     case 25:
@@ -326,7 +309,7 @@ void lightProgram(int subProgramIndex)
       break;
 
     case 33:
-      //dazzle(GRB_Blue, GRB_KRFWhite,CYCLE_TIME_LONG);
+      //dazzle(GRB_Blue, GRB_KRFWhite, CYCLE_TIME_LONG);
       break;
 
     case 34:
@@ -337,7 +320,7 @@ void lightProgram(int subProgramIndex)
     case 35:
       goGreen();
       zigzag(GRB_KRFDarkGreen, GRB_KRFWhite, GRB_Lime, CYCLE_TIME_LONG*2, ANIMATION_DELAY);
-      rotateArrayLeft(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
       break;
 
     case 36:
@@ -376,14 +359,14 @@ void lightProgram(int subProgramIndex)
       break;
 
     case 44:
-      //         //goGreen();
-      //        //dazzle(GRB_DarkRed, GRB_KRFWhite, CYCLE_TIME_LONG);
+      //goGreen();
+      //dazzle(GRB_DarkRed, GRB_KRFWhite, CYCLE_TIME_LONG);
       break;
 
 
     case 45:
-      //         //goGreen();
-      //        //dazzle(GRB_DarkRed, GRB_Teal, CYCLE_TIME_LONG);
+      //goGreen();
+      //dazzle(GRB_DarkRed, GRB_Teal, CYCLE_TIME_LONG);
       break;
 
     case 46:
@@ -394,7 +377,7 @@ void lightProgram(int subProgramIndex)
     case 47:
       goGreen();
       zigzag(GRB_KRFDarkGreen, GRB_KRFWhite, GRB_DarkRed, CYCLE_TIME_LONG*2, ANIMATION_DELAY);
-      rotateArrayLeft(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
       break;
 
     case 48:
@@ -451,8 +434,9 @@ void lightProgram(int subProgramIndex)
     case 60:
       goGreen();
       zigzag(GRB_KRFDarkGreen, GRB_KRFWhite, GRB_Purple, CYCLE_TIME_LONG*2, ANIMATION_DELAY);
-      rotateArrayLeft(CYCLE_TIME_LONG, ANIMATION_DELAY);
+      rotateArrayLeft(CYCLE_TIME_LONG*2, ANIMATION_DELAY);
       break;
+    
     default:
       break;
   }
@@ -461,12 +445,13 @@ void lightProgram(int subProgramIndex)
 }
 
 
-void marquee(int color1, int color0, unsigned long timeInSec)
+void marquee(int color0, int color1, unsigned long timeInSec)
 {
   
   for (int col = 0; col < NUM_STRIPS; col++) {
       for (int row = 0; row < NUM_LEDS_PER_STRIP; row++) 
       {
+        // for columns 0 and 4, use "accent" color, otherwise background color
         if(col % 4 == 0)
           leds[col][row] = color1;
         else
@@ -478,7 +463,7 @@ void marquee(int color1, int color0, unsigned long timeInSec)
   
 }
 
-void marquee2(int color1, int color0, unsigned long timeInSec)
+void marquee2(int color0, int color1, unsigned long timeInSec)
 {
   
   for (int col = 0; col < NUM_STRIPS; col++) {
@@ -507,27 +492,7 @@ void garlandWithSlide(CRGB color0, CRGB color1, CRGB color2, CRGB color3, unsign
 }
 void zigzag(CRGB color0, CRGB color1, CRGB color2, unsigned long timeInSec, int msecDelay)
 {
-  /*
-  int zigzags[16][8] = 
-    {
-    {0,0,0,0,1,0,0,0},
-    {0,0,0,0,1,0,0,0},
-    {0,0,0,1,1,1,0,0},
-    {0,0,0,1,1,1,1,0},
-    {0,0,1,1,1,1,1,0},
-    {0,0,1,1,1,1,1,0},
-    {0,1,1,1,0,1,1,1},
-    {0,1,1,1,0,1,1,1},
-    {1,1,1,0,0,0,1,1},
-    {1,1,1,0,0,0,0,1},
-    {1,1,0,0,0,0,0,1},
-    {1,1,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0},
-    {1,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0}
-    };
-  */
+  // 3 color Pattern 
   int zigzags[16][8] = 
     {
     {0,0,0,0,1,0,0,0},
@@ -547,12 +512,12 @@ void zigzag(CRGB color0, CRGB color1, CRGB color2, unsigned long timeInSec, int 
     {0,0,0,0,0,0,0,0},
     {0,0,0,0,0,0,0,0}
     };
-  
+
   int loopCount = 0;
   unsigned long exitTime = millis() + timeInSec * 1000L;
 
   
-  for(int n = 0; n < 48; n++)
+  for(int n = 0; n < 96; n++)
   {
     rotateDownOneRow();
     
@@ -599,12 +564,72 @@ void zigzag(CRGB color0, CRGB color1, CRGB color2, unsigned long timeInSec, int 
 
   }
   */
+  return;
+}
 
 
 
+void swoosh(unsigned long timeInSec, int msecDelay)
+{
+int swooshMap[25][8] =
+{  {1,1,0,0,0,0,0,0},
+  {1,1,1,0,0,0,0,0},
+  {1,1,1,0,0,0,0,0},
+  {1,1,1,1,0,0,0,0},
+  {1,1,1,1,0,0,0,0},
+  {1,1,1,1,1,0,0,0},
+  {1,1,1,1,1,0,0,0},
+  {1,1,1,1,1,1,0,0},
+  {1,1,1,1,1,1,0,0},
+  {1,1,1,1,1,1,1,0},
+  {1,1,1,1,1,1,1,0},
+  {1,1,1,1,1,1,1,0},
+  {0,0,1,1,1,1,1,1},
+  {0,0,0,1,1,1,1,1},
+  {0,0,0,0,1,1,1,1},
+  {0,0,0,0,0,1,1,1},
+  {0,0,0,0,0,0,1,1},
+  {0,0,0,0,0,0,1,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1},
+  {0,0,0,0,0,0,0,1}
+};
+
+  int loopCount = 0;
+  unsigned long exitTime = millis() + timeInSec * 1000L;
+  
+  for(int n = 0; n < 50; n++)
+  {
+    rotateDownOneRow();
+    
+	  for (int col = 0; col < NUM_STRIPS; col++)
+    {
+      
+      if( 0 == swooshMap[loopCount%25][col])
+        leds[col][ NUM_LEDS_PER_STRIP-1] = GRB_KRFDarkGreen;
+      else
+        leds[col][ NUM_LEDS_PER_STRIP-1] = GRB_KRFWhite;
+
+ 
+    }
+    
+	//Serial.println("rotateDown - in");
+    FastLED.show();
+    //Serial.println("rotateDown - out");
+    delay(msecDelay);
+
+    loopCount++;
+  }
 
   return;
 }
+
+
+
 
 void icicles(CRGB color0, unsigned long timeInSec, int msecDelay) {
   //Serial.println(101);
@@ -624,10 +649,6 @@ void icicles(CRGB color0, unsigned long timeInSec, int msecDelay) {
 
   rotateDown(timeInSec, msecDelay);
 }
-
-
-
-
 
 
 void horzColorBandsDiag(CRGB color1, int rows1, CRGB color2, int rows2, int diagCount, unsigned long timeInSec, int msecDelay) {
@@ -775,7 +796,8 @@ void rotateArrayLeft(unsigned long timeInSec, int msecDelay) {
 ////
 ////
 
-void setHorzColorBands(CRGB color1, int width1, CRGB color2, int width2) {
+void setHorzColorBands(CRGB color1, int width1, CRGB color2, int width2)
+{
   ////Serial.println("setHorzColorBands");
   int col;
   int totalRowsSet = 0;
@@ -1920,543 +1942,3 @@ void blip(int times) {
   }
 }
 
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-//  Old Code Repository
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-
-// bool isOdd(int testValue)
-// {
-//   return (testValue%2==1);
-// }
-// bool isEven(int testValue)
-// {
-//   return !isOdd(testValue);
-// }
-
-// void diagonalize(int offset)
-// {
-//   int workingOffset;
-
-//   for(int col = 0; col < NUM_STRIPS; col++)
-//   {
-//     workingOffset = (col*offset)%NUM_LEDS_PER_STRIP;
-//     slideColDown(col, workingOffset);
-//   }
-// }
-
-// void diagonalize2(int offset)
-// {
-//   int workingOffset;
-
-//   for(int row = 0; row < NUM_LEDS_PER_STRIP; row++)
-//   {
-//     workingOffset = (row*offset)%NUM_STRIPS;
-//     slideRowLeft(row, workingOffset);
-//   }
-// }
-
-
-
-////
-////
-//// void slideColDown(int col, int numRows)
-////
-//// Slice the given column down n Rows by calling SlideColDownOne() n times
-////
-// void slideColDown(int col, int numRows)
-// {
-//   for(int rowCount = 0; rowCount < numRows; rowCount++)
-//   {
-//     slideColDownOne(col);
-//   }
-// }
-
-
-// ////
-// ////
-// //// void slideColDownOne(int col)
-// ////
-// //// Slice the given column down 1 Row
-// ////
-// void slideColDownOne(int col)
-// {
-//   CRGB temp;
-//   temp = leds[col][0];
-//   for(int row = 0; row < NUM_LEDS_PER_STRIP-1; row++)
-//   {
-//     leds[col][row] = leds[col][row+1];
-//   }
-//   leds[col][NUM_LEDS_PER_STRIP-1] = temp;
-// }
-
-// ////
-// ////
-// //// void slideRowLeft(int row, int numCols)
-// ////
-// //// Slice the given column down n Rows by calling SlideColDownOne() n times
-// ////
-// void slideRowLeft(int row, int numCols)
-// {
-//   for(int colCount = 0; colCount < numCols; colCount++)
-//   {
-//     slideRowLeftOne(row);
-//   }
-// }
-
-
-// ////
-// ////
-// //// void slideRowLeftOne(int row)
-// ////
-// //// Slice the given column down 1 Row
-// ////
-// void slideRowLeftOne(int row)
-// {
-//   CRGB temp;
-//   temp = leds[0][row];
-//   for(int col = 0; col < NUM_STRIPS-1; col++)
-//   {
-//     leds[col][row] = leds[col+1][row];
-//   }
-//   leds[NUM_STRIPS-1][row] = temp;
-// }
-
-
-
-// /////////////////////////////  Fromn small tree
-
-// //void RainbowSegueVert(unsigned long timeInSec, int msecDelay)
-// //{
-// //  //////Serial.println("RainbowSegueVert");
-// //  unsigned long exitTime = millis() + timeInSec * 1000L;
-// //
-// //  int hue0 = 0;
-// //  int hue1 = hue0 + 25;
-// //  int hue2 = hue1 + 25;
-// //  int hue3 = hue2 + 25;
-// //  int hue4 = hue3 + 25;
-// //  int hue5 = hue4 + 25;
-// //  int hue6 = hue5 + 25;
-// //  int hue7 = hue6 + 25;
-// //  bool oddEven = true;
-// //
-// //  int loopCount = 0;
-// //  while( millis() < exitTime)
-// //  {
-// //    for(int row = 0; row < 50; row++)
-// //    {
-// //        leds[0][row] = CHSV( hue0, 255, 255);
-// //        leds[1][row] = CHSV( hue1, 255, 255);
-// //        leds[2][row] = CHSV( hue2, 255, 255);
-// //        leds[3][row] = CHSV( hue3, 255, 255);
-// //        leds[4][row] = CHSV( hue4, 255, 255);
-// //        leds[5][row] = CHSV( hue5, 255, 255);
-// //        leds[6][row] = CHSV( hue6, 255, 255);
-// //        leds[7][row] = CHSV( hue7, 255, 255);
-// //
-// //    }
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //
-// //    hue0 = hue1;
-// //    hue1 = hue2;
-// //    hue2 = hue3;
-// //    hue3 = hue4;
-// //    hue4 = hue5;
-// //    hue5 = hue6;
-// //    hue6 = hue7;
-// //    hue7 = (hue7 + 10) % 255 ;
-// //
-// //    loopCount++;
-// //  }
-// //  return;
-// //}
-
-// //void RainbowSegueVert2(unsigned long timeInSec, int msecDelay)
-// //{
-// //  //////Serial.println("RainbowSegueVert2");
-// //  unsigned long exitTime = millis() + timeInSec * 1000L;
-// //
-// //  int hue0 = 0;
-// //  int hue1 = hue0 + 5;
-// //  int hue2 = hue1 + 5;
-// //  int hue3 = hue2 + 5;
-// //  int hue4 = hue3 + 5;
-// //  int hue5 = hue4 + 5;
-// //  int hue6 = hue5 + 5;
-// //  int hue7 = hue6 + 5;
-// //
-// //  int loopCount = 0;
-// //  while( millis() < exitTime)
-// //  {
-// //    for(int row = 0; row < 50; row++)
-// //    {
-// //        leds[0][row] = CHSV( hue0, 255, 255);
-// //        leds[1][row] = CHSV( hue1, 255, 255);
-// //        leds[2][row] = CHSV( hue2, 255, 255);
-// //        leds[3][row] = CHSV( hue3, 255, 255);
-// //        leds[4][row] = CHSV( hue4, 255, 255);
-// //        leds[5][row] = CHSV( hue5, 255, 255);
-// //        leds[6][row] = CHSV( hue6, 255, 255);
-// //        leds[7][row] = CHSV( hue7, 255, 255);
-// //
-// //    }
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //
-// //    hue0 = hue1;
-// //    hue1 = hue2;
-// //    hue2 = hue3;
-// //    hue3 = hue4;
-// //    hue4 = hue5;
-// //    hue5 = hue6;
-// //    hue6 = hue7;
-// //    hue7 = (hue7 + 5) % 255 ;
-// //
-// //    loopCount++;
-// //
-// //  }
-// //  return;
-// //
-// //}
-// //
-
-
-
-
-// //void RainbowSegueHorz(unsigned long timeInSec, int msecDelay, int diag)
-// //{
-// //  //////Serial.println("RainbowSegueHorz");
-// //  unsigned long exitTime = millis() + timeInSec * 1000L;
-// //
-// //  int hue0 = 0;  // base color for each rep
-// //  int hue1 = 0;
-// //  int loopCount = 0;
-// //  while( millis() < exitTime)
-// //  {
-// //    for(int col =0; col < 8; col++)
-// //    {
-// //      hue1 = hue0;
-// //      for(int row = 0; row < 50; row++)
-// //      {
-// //        leds[col][row] = CHSV( hue1, 255, 255);
-// //        hue1 = (hue1 + 10)%255;
-// //      }
-// //    }
-// //    hue0 =  (hue0 + 10)%255;
-// //
-// //    diagonalize(diag);
-// //
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //
-// //    loopCount++;
-// //  }
-// //  return;
-// //}
-// //
-
-// void dazzle(CRGB color0,CRGB color1, unsigned long timeInSec)
-// {
-//   ////Serial.println("dazzle");
-//   horzColorBandsDiag(color0, 2, color1, 2, 2, timeInSec,100);
-//   return;
-// }
-
-
-
-// void CandyCane(uint16_t countMax)
-// {
-// //  for(int loops = 0; loops < countMax; loops++)
-// //  {
-// //    for(int row = 0; row < 50; row++)
-// //    {
-// ////      leds[0][row] = CHSV( hue0, 255, 255);
-// ////      leds[1][row] = CHSV( hue1, 255, 255);
-// ////      leds[2][row] = CHSV( hue2, 255, 255);
-// ////      leds[3][row] = CHSV( hue3, 255, 255);
-// ////      leds[4][row] = CHSV( hue4, 255, 255);
-// ////      leds[5][row] = CHSV( hue5, 255, 255);
-// ////      leds[6][row] = CHSV( hue6, 255, 255);
-// ////      leds[7][row] = CHSV( hue7, 255, 255);
-// //
-// //      if(row < 6)
-// //      else if (row < 12)
-// //      else if (row < 18)
-// //      else if (row < 24)
-// //      else if (row < 30)
-// //      else if (row < 36)
-// //      else if (row < 42)
-// //      else
-// ////        leds[0][row] = CHSV( hue0, 255, 255);
-// ////        leds[1][row] = CHSV( hue1, 255, 255);
-// ////        leds[2][row] = CHSV( hue2, 255, 255);
-// ////        leds[3][row] = CHSV( hue3, 255, 255);
-// ////        leds[4][row] = CHSV( hue4, 255, 255);
-// ////        leds[5][row] = CHSV( hue5, 255, 255);
-// ////        leds[6][row] = CHSV( hue6, 255, 255);
-// ////        leds[7][row] = CHSV( hue7, 255, 255);
-// //
-// //    }
-// //    FastLED.show();
-// //    delay(ANIMATION_DELAY*2);
-// //
-// //
-// //  }
-//   return;
-
-// }
-
-
-// //void spiral(CRGB color[], unsigned long timeInSec, int msecDelay)
-// //{
-// //  ////Serial.println("spiral[]");
-// //  FastLED.clear();
-// //
-// //      spiral(GRB_DarkGreen, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      spiral(GRB_Magenta, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      spiral(GRB_KRFWhite, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      spiral(GRB_Navy, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      spiral(GRB_Teal, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //}
-
-// //void spiral2(CRGB color[], unsigned long timeInSec, int msecDelay)
-// //{
-// //  ////Serial.println("spiral2[]");
-// //  FastLED.clear();
-// //
-// //      mirrorSpiral(GRB_DarkGreen, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      mirrorSpiral(GRB_Magenta, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      mirrorSpiral(GRB_KRFWhite, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      mirrorSpiral(GRB_Navy, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //      mirrorSpiral(GRB_Teal, timeInSec, msecDelay);
-// //      wdt_reset();                    // Reset the watchdog
-// //
-// //
-// //}
-
-
-// //void spiral(CRGB color, unsigned long timeInSec, int msecDelay)
-// //{
-// //  ////Serial.println("spiral");
-// //  int i;
-// //  int col;
-// //  unsigned long exitTime = millis() + timeInSec * 1000L;
-// ////  while( millis() < exitTime)
-// ////  {
-// //
-// //    //wdt_reset();                    // Reset the watchdog
-// //    FastLED.clear();
-// //
-// //
-// //    //Loop 1  --- Col 0, Row 49, Col 7, Row 0
-// //    for(i=0; i < 50; i++)
-// //    {
-// //      leds[0][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=1;col < 8; col++)
-// //    {
-// //      leds[col][49] = color;
-// //      leds[col][48] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; -1 < i; i--)
-// //    {
-// //      leds[7][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=6; 0 < col; col--)
-// //    {
-// //      leds[col][0] = color;
-// //      leds[col][1] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //
-// //
-// //
-// //
-// //    //Loop 2  --- Col 1, Row 48, Col 6, Row 1
-// //    for(i=2; i < 48; i++)
-// //    {
-// //      leds[1][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=2; col < 7; col++)
-// //    {
-// //      leds[col][47] = color;
-// //      leds[col][46] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; 0 < i; i--)
-// //    {
-// //      leds[6][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=5; 1 < col; col--)
-// //    {
-// //      leds[col][2] = color;
-// //      leds[col][3] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //
-// //
-// //
-// //    //Loop 3  --- Col 2, Row 47, Col 5, Row 2
-// //    for(i=4; i < 46; i++)
-// //    {
-// //      leds[2][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=3;col < 6; col++)
-// //    {
-// //      leds[col][45] = color;
-// //      leds[col][44] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; -1 < i; i--)
-// //    {
-// //      leds[5][i] = color;
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //    }
-// //    for(col=6; 0 < col; col--)
-// //    {
-// //      leds[col][4] = color;
-// //      leds[col][5] = color;
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //    }
-// //
-// //
-// //
-// //    //Loop 4  --- Col 3, Row 46, Col 4, Row 2
-// //    for(i=6; i < 44; i++)
-// //    {
-// //      leds[3][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=4;col < 5; col++)
-// //    {
-// //      leds[col][47] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; -1 < i; i--)
-// //    {
-// //      leds[4][i] = color;
-// //    FastLED.show();
-// //    delay(msecDelay);
-// //    }
-// //
-// ////  }
-// //
-// //}
-// //
-// //
-// //
-// //
-
-// //void mirrorSpiral(CRGB color, unsigned long timeInSec, int msecDelay)
-// //{
-// //  //////Serial.println("mirrorSpiral");
-// //  int i;
-// //  int col;
-// //  FastLED.clear();
-// //
-// //
-// //    //Loop 1  --- Col 0, Row 49, Col 7, Row 0
-// //    for(i=0; i < 50; i++)
-// //    {
-// //      leds[0][i] = color;
-// //      leds[7][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=1;col < 8; col++)
-// //    {
-// //      leds[col][49] = color;
-// //      leds[col][48] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; -1 < i; i--)
-// //    {
-// //      leds[3][i] = color;
-// //      leds[4][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=6; 0 < col; col--)
-// //    {
-// //      leds[col][0] = color;
-// //      leds[col][1] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //
-// //
-// //
-// //
-// //    //Loop 2  --- Col 1, Row 48, Col 6, Row 1
-// //    for(i=2; i < 48; i++)
-// //    {
-// //      leds[1][i] = color;
-// //      leds[6][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=2; col < 7; col++)
-// //    {
-// //      leds[col][47] = color;
-// //      leds[col][46] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(i=48; 0 < i; i--)
-// //    {
-// //      leds[2][i] = color;
-// //      leds[5][i] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //    for(col=5; 1 < col; col--)
-// //    {
-// //      leds[col][2] = color;
-// //      leds[col][3] = color;
-// //      FastLED.show();
-// //      delay(msecDelay);
-// //    }
-// //
-// //}
